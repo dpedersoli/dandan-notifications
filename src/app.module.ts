@@ -2,10 +2,11 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
-//isso é um decorator
+//isso é um decorator ("decorador"), que acopla um funcionamento dentro de uma outra classe, variável, etc
+//@Module é o decorator (usa-se o "@" para definir um decorator), e dentro dele passo suas especificações
 @Module({
   imports: [],
-  controllers: [AppController],
+  controllers: [AppController], //'controller' são os arquivos que são pontos de entrada na aplicação, arquivos que lidam com o recebimento/entrada de HTTP Requests
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
