@@ -1,0 +1,22 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Notification {
+  id          String    @id //aqui eu falei que é uma var 'id' do tipo 'String', e que ele é uma 'primary key' quando uso o '@id'
+  recipientId String //isso é como se fosse uma chave estrangeira (foreignKey) -> é uma referência de uma informação que está em outro microsserviço que estou usando nesse MS -> e dessa forma, por usar informações nesse MS vindas de outro MS, o ideal é usar foreignkey p/ referenciar ao usuário/cliente (por ex.) em específico
+  content     String
+  category    String
+  readAt      DateTime? //o '?' determina que ela não é algo necessário de ter pois a pessoa pode ter ou não ter lido a notificação
+  createdAt   DateTime  @default(now()) //aqui ele preenche o campo 'createdAt' com a data atual ('now()') caso não seja informada o DateTime no momento em que for salvo no DB
+
+  @@index([recipientId]) //aqui eu crio um índice pro recipientId, pois no caso ele buscará informações de um usário específico
+}

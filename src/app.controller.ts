@@ -1,13 +1,29 @@
 import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Body, Post } from '@nestjs/common/decorators';
+import { PrismaService } from './prisma.service';
+import { randomUUID } from 'node:crypto';
+import { CreateNotificationBody } from './create-notification-body';
 
-@Controller('app') //posso passar rotas aqui também
+@Controller('notifications')
 export class AppController {
-  constructor(private readonly appService: AppService) {} //essa 'constructor' recebe um parâmetro 'appService' (que é uma classe, e 'appService' acaba sendo o nome da 'constructor') que é do tipo 'AppService'
+  constructor(private readonly prisma: PrismaService) { }
 
-  @Get('hello') //posso passar o endereço da rota no parâmetro "('hello')"
-  getHello(): string {
-    //'getHello é o nome do método (tanto faz o nome do método dado)
-    return this.appService.getHello(); //eu acesso a 'constructor' 'appService' e uso a função 'getHello' de dentro dela
+  @Get()
+  list() {
+    return this.prisma.notification.findMany();
+  }
+
+  @Post()
+  async create(@Body() body: CreateNotificationBody) { //'@Body' é um 'Decorator' do corpo da requisição, que ficará dentr do 'body' e depois dele o tipo da requisição
+    const { recipientId, content, category } = body;
+
+    await this.prisma.notification.create({
+      data: {
+        id: randomUUID(),
+        content,
+        category,
+        recipientId,
+      },
+    });
   }
 }
